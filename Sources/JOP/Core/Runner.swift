@@ -47,6 +47,18 @@ struct Runner {
     
     // MARK: - Distribute
     private func difine(_ json: JSON) throws {
-        
+        if let type = json["type"].string {
+            if let v = VariableTypesManager.shared.types[type] {
+                if let name = json["name"].string {
+                    try Scope.main.defineVariable(name: name, type: v.type)
+                } else {
+                    throw JOPVariableError(kind: .notNamedAtTheTimeOfDefinition)
+                }
+            } else {
+                throw JOPVariableError(kind: .undefinedType(type: type))
+            }
+        } else {
+            throw JOPRunError(kind: .missJSONKey(keyName: "type"))
+        }
     }
 }

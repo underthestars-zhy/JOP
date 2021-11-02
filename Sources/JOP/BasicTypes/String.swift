@@ -9,4 +9,5 @@ import Foundation
 
 struct JOPString: VariableProtocol {
     static let identify: String = "String"
+    static let type: Types = .string
 }

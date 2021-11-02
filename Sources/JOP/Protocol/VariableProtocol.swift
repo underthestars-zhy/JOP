@@ -9,4 +9,5 @@ import Foundation
 
 protocol VariableProtocol {
     static var identify: String { get }
+    static var type: Types { get }
 }

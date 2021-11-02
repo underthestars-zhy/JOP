@@ -15,5 +15,5 @@ public struct JOPRunError: Error {
         case errorJSONKey(keyName: String)
     }
     
-    public var kind: ErrorKind
+    public let kind: ErrorKind
 }
