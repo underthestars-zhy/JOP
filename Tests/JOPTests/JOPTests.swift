@@ -3,9 +3,17 @@ import XCTest
 
 final class JOPTests: XCTestCase {
     func testExample() throws {
-        JOP.run("", filePath: URL(fileURLWithPath: "")) { error in
+        let run: [String : Any] = [
+            "main" : [
+                [
+                    "command": "define"
+                ]
+            ]
+        ]
+        
+        JOP.run(run, filePath: URL(fileURLWithPath: "")) { error in
             print(error)
         }?
             .start()
-    }
+    }   
 }

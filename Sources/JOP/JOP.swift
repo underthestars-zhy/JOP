@@ -19,4 +19,15 @@ public struct JOP {
         
         return nil
     }
+    
+    public static func run(_ dict: [String : Any], filePath: URL, errorHandle: ((Error) -> Void)? = nil) -> Processer? {
+        guard !dict.isEmpty else {
+            if let errorHandle = errorHandle {
+                errorHandle(JOPRunError(kind: .unableToParseDict))
+            }
+            return nil
+        }
+        
+        return Processer(json: JSON(dict), filePath: filePath, errorHandle: errorHandle ?? { _ in })
+    }
 }
