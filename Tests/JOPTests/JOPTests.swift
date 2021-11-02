@@ -3,9 +3,9 @@ import XCTest
 
 final class JOPTests: XCTestCase {
     func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(JOP().text, "Hello, World!")
+        JOP.run("", filePath: URL(fileURLWithPath: "")) { error in
+            print(error)
+        }?
+            .start()
     }
 }
