@@ -8,8 +8,6 @@
 import Foundation
 
 struct Scope {
-    static var main = Scope()
-    
     var variables = [String : (value: VariableProtocol?, type: Types)]()
     
     mutating func defineVariable(name: String, type: Types) throws {
@@ -17,6 +15,14 @@ struct Scope {
             throw JOPVariableError(kind: .duplicateDefinition)
         } else {
             variables[name] = (nil, type)
+        }
+    }
+    
+    mutating func assignmentVariable(name: String, value: VariableProtocol) throws {
+        if variables.contains(where: { $0.key == name }) {
+            variables[name]?.value = value
+        } else {
+            throw JOPVariableError(kind: .undefinedVariable(name: name))
         }
     }
 }

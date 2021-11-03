@@ -12,6 +12,12 @@ struct LiteralManager {
     static let shared = LiteralManager()
     
     func recognize(_ value: JSON) -> VariableProtocol? {
+        if let str = value.string {
+            return JOPString(value: str)
+        } else if value.null != nil {
+            return JOPVoid()
+        }
+        
         return nil
     }
 }

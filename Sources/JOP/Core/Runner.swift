@@ -8,8 +8,10 @@
 import Foundation
 import SwiftyJSON
 
-struct Runner {
+class Runner {
     let processer: Processer
+    var scope = Scope()
+    var packageManager = PackageManager()
     
     init?(_ processer: Processer?) {
         if let processer = processer {
@@ -37,7 +39,9 @@ struct Runner {
     private func distribute(_ text: String, json: JSON) throws {
         do {
             switch text {
-            case "define": try difine(json)
+            case "define": try define(json)
+            case "assignment": try assignment(json)
+            case "call": try call(json)
             default: throw JOPRunError(kind: .errorJSONKey(keyName: text))
             }
         } catch {
@@ -46,16 +50,48 @@ struct Runner {
     }
     
     // MARK: - Distribute
-    private func difine(_ json: JSON) throws {
+    private func define(_ json: JSON) throws {
         if let type = json["type"].string {
             if let v = VariableTypesManager.shared.types[type] {
                 if let name = json["name"].string {
-                    try Scope.main.defineVariable(name: name, type: v.type)
+                    try scope.defineVariable(name: name, type: v.type)
                 } else {
                     throw JOPVariableError(kind: .notNamedAtTheTimeOfDefinition)
                 }
             } else {
                 throw JOPVariableError(kind: .undefinedType(type: type))
+            }
+        } else {
+            throw JOPRunError(kind: .missJSONKey(keyName: "type"))
+        }
+    }
+    
+    private func assignment(_ json: JSON) throws {
+        if let value = LiteralManager.shared.recognize(json["value"]) {
+            if let name = json["name"].string {
+                try scope.assignmentVariable(name: name, value: value)
+            } else {
+                throw JOPRunError(kind: .missJSONKey(keyName: "name"))
+            }
+        } else {
+            throw JOPVariableError(kind: .unrecognizedValue)
+        }
+    }
+    
+    private func call(_ json: JSON) throws {
+        if let type = json["type"].string {
+            if let name = json["name"].string {
+                if let value = LiteralManager.shared.recognize(json["value"]) {
+                    if json.contains(where: { $0.0 == "package" }) {
+                        
+                    } else { // Base Package
+                        
+                    }
+                } else {
+                    throw JOPFuncError(kind: .unrecognizedValue)
+                }
+            } else {
+                throw JOPRunError(kind: .missJSONKey(keyName: "name"))
             }
         } else {
             throw JOPRunError(kind: .missJSONKey(keyName: "type"))
