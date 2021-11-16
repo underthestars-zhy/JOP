@@ -23,26 +23,21 @@ class Runner {
     
     func run() {
         for json in processer.mainJson {
-            guard let command = json["command"].string else {
-                processer.errorHandle(JOPRunError(kind: .missJSONKey(keyName: "command")))
-                return
-            }
-            
             do {
-                try distribute(command, json: json)
+                try distribute(json)
             } catch {
                 processer.errorHandle(error)
             }
         }
     }
     
-    private func distribute(_ text: String, json: JSON) throws {
+    private func distribute(_ json: JSON) throws {
         do {
-            switch text {
-            case "define": try define(json)
-            case "assignment": try assignment(json)
-            case "call": try call(json)
-            default: throw JOPRunError(kind: .errorJSONKey(keyName: text))
+            switch try Parser.parser(json: json, processer: processer) {
+            case .pass: return
+            case .define: try define(json)
+            case .assignment: try assignment(json)
+            case .call: try call(json)
             }
         } catch {
             throw error
@@ -84,8 +79,10 @@ class Runner {
                 if let value = LiteralManager.shared.recognize(json["value"]) {
                     if json.contains(where: { $0.0 == "package" }) {
                         
-                    } else { // Base Package
-                        
+                    } else { // Standard Package
+                        if type == "func" {
+                            try Base.call(name: name, value: value)
+                        }
                     }
                 } else {
                     throw JOPFuncError(kind: .unrecognizedValue)

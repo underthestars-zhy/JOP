@@ -1,5 +1,5 @@
 //
-//  Base.swift
+//  Standard.swift
 //  
 //
 //  Created by 朱浩宇 on 2021/11/3.
@@ -8,8 +8,8 @@
 import Foundation
 import SwiftyJSON
 
-struct Base: PackageProtocol {
-    static let name: String = "Base"
+struct Standard: PackageProtocol {
+    static let name: String = "Standard"
     static let inner: Bool = true
     
     static func call(name: String, value: JSON) throws -> VariableProtocol {

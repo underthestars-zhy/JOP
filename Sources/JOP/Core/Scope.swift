@@ -9,6 +9,7 @@ import Foundation
 
 struct Scope {
     var variables = [String : (value: VariableProtocol?, type: Types)]()
+    var packages: [PackageProtocol.Type] = [Standard]
     
     mutating func defineVariable(name: String, type: Types) throws {
         if variables.contains(where: { $0.key == name }) {

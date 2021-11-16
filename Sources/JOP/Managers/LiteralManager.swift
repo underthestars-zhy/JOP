@@ -13,8 +13,8 @@ struct LiteralManager {
     
     func recognize(_ value: JSON) -> VariableProtocol? {
         if let str = value.string {
-            return JOPString(value: str)
-        } else if value.null != nil {
+            return StringLiteral(value)?.default
+        } else if value.null != nil { // "type": Null
             return JOPVoid()
         }
         

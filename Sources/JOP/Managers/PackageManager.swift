@@ -9,6 +9,6 @@ import Foundation
 
 struct PackageManager {
     var packages: [PackageProtocol] = [
-        Base()
+        Standard()
     ]
 }
