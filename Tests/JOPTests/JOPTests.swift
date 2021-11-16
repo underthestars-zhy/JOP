@@ -7,18 +7,35 @@ final class JOPTests: XCTestCase {
             "main" : [
                 [
                     "command": "define",
-                    "name": "test",
+                    "name": "theFirstValue",
                     "type": "String"
                 ],
                 [
                     "command": "assignment",
-                    "name": "test",
+                    "name": "theFirstValue",
                     "value": "hello, world!"
                 ],
                 [
                     "command": "call",
                     "type": "func",
-                    "name": "print"
+                    "name": "print",
+                    "passBy": "$theFirstValue"
+                ],
+                [
+                    "command": "define",
+                    "name": "theSecondValue",
+                    "type": "String"
+                ],
+                [
+                    "command": "assignment",
+                    "name": "theSecondValue",
+                    "value": "hello, JOP!"
+                ],
+                [
+                    "command": "call",
+                    "type": "func",
+                    "name": "print",
+                    "passBy": "$theSecondValue"
                 ]
             ]
         ]
@@ -26,6 +43,9 @@ final class JOPTests: XCTestCase {
         JOP.run(run, filePath: URL(fileURLWithPath: "")) { error in
             print(error)
         }?
+            .onOutPut{ outPut in
+                print(outPut.text)
+            }
             .start()
     }
 }

@@ -14,6 +14,7 @@ public struct JOPVariableError: Error {
         case notNamedAtTheTimeOfDefinition
         case undefinedVariable(name: String)
         case unrecognizedValue
+        case typeError(call: String)
     }
     
     public let kind: ErrorKind

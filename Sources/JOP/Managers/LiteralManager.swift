@@ -11,9 +11,11 @@ import SwiftyJSON
 struct LiteralManager {
     static let shared = LiteralManager()
     
-    func recognize(_ value: JSON) -> VariableProtocol? {
-        if let str = value.string {
-            return StringLiteral(value)?.default
+    func recognize(_ value: JSON, runner: Runner) throws -> VariableProtocol? {
+        if let res = StringLiteral(value, runner: runner) {
+            return res.default
+        } else if let res = VariableLiteral(value, runner: runner)  {
+            return try res.default
         } else if value.null != nil { // "type": Null
             return JOPVoid()
         }
@@ -26,4 +28,5 @@ struct LiteralManager {
  string: "xxxx"
  int: 1
  double: 1.0
+ var: "$....."
  */

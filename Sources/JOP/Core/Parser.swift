@@ -16,11 +16,10 @@ enum Parser {
     
     static func parser(json: JSON, processer: Processer) throws -> Self {
         guard let command = json["command"].string else {
-            processer.errorHandle(JOPRunError(kind: .missJSONKey(keyName: "command")))
-            return
+            throw JOPRunError(kind: .missJSONKey(keyName: "command"))
         }
         
-        if json["mark"].string == "pass" || json["mark"].array?.contains(where: {$0.string == "pass"}) {
+        if json["mark"].string == "pass" || (json["mark"].array ?? []).contains(where: {$0.string == "pass"}) {
             return .pass
         } else if command == "define" {
             return .define
@@ -30,6 +29,6 @@ enum Parser {
             return .call
         }
         
-        throw JOPRunError(kind: .errorJSONKey(keyName: text))
+        throw JOPRunError(kind: .errorJSONKey(keyName: "command"))
     }
 }

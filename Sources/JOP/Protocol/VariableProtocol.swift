@@ -10,4 +10,11 @@ import Foundation
 protocol VariableProtocol {
     static var identify: String { get }
     static var type: Types { get }
+    var type: Types { get }
+}
+
+extension VariableProtocol{
+    var type: Types {
+        Self.type
+    }
 }

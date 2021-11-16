@@ -11,7 +11,6 @@ import SwiftyJSON
 class Runner {
     let processer: Processer
     var scope = Scope()
-    var packageManager = PackageManager()
     
     init?(_ processer: Processer?) {
         if let processer = processer {
@@ -32,15 +31,11 @@ class Runner {
     }
     
     private func distribute(_ json: JSON) throws {
-        do {
-            switch try Parser.parser(json: json, processer: processer) {
-            case .pass: return
-            case .define: try define(json)
-            case .assignment: try assignment(json)
-            case .call: try call(json)
-            }
-        } catch {
-            throw error
+        switch try Parser.parser(json: json, processer: processer) {
+        case .pass: return
+        case .define: try define(json)
+        case .assignment: try assignment(json)
+        case .call: _ = try call(json) // single call
         }
     }
     
@@ -62,7 +57,7 @@ class Runner {
     }
     
     private func assignment(_ json: JSON) throws {
-        if let value = LiteralManager.shared.recognize(json["value"]) {
+        if let value = try LiteralManager.shared.recognize(json["value"], runner: self) {
             if let name = json["name"].string {
                 try scope.assignmentVariable(name: name, value: value)
             } else {
@@ -73,19 +68,15 @@ class Runner {
         }
     }
     
-    private func call(_ json: JSON) throws {
+    private func call(_ json: JSON) throws -> VariableProtocol {
         if let type = json["type"].string {
             if let name = json["name"].string {
-                if let value = LiteralManager.shared.recognize(json["value"]) {
-                    if json.contains(where: { $0.0 == "package" }) {
-                        
-                    } else { // Standard Package
-                        if type == "func" {
-                            try Base.call(name: name, value: value)
-                        }
+                if json.contains(where: { $0.0 == "package" }) {
+                    
+                } else { // Standard Package
+                    if type == "func" {
+                        return try Standard.call(name: name, value: try ValueNormalization.shared.normalization(json["passBy"], runner: self), runner: self)
                     }
-                } else {
-                    throw JOPFuncError(kind: .unrecognizedValue)
                 }
             } else {
                 throw JOPRunError(kind: .missJSONKey(keyName: "name"))
@@ -93,5 +84,7 @@ class Runner {
         } else {
             throw JOPRunError(kind: .missJSONKey(keyName: "type"))
         }
+        
+        return JOPVoid() // TODO: Remove
     }
 }

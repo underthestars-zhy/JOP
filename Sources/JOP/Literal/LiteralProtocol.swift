@@ -9,7 +9,7 @@ import Foundation
 import SwiftyJSON
 
 protocol LiteralProtocol {
-    var `default`: VariableProtocol { get }
+    var `default`: VariableProtocol { get throws }
     
-    init?(_ value: JSON)
+    init?(_ value: JSON, runner: Runner)
 }

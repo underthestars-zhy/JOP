@@ -12,5 +12,5 @@ protocol PackageProtocol {
     static var name: String { get }
     static var inner: Bool { get }
     
-    static func call(name: String, value: JSON) -> VariableProtocol
+    static func call(name: String, value: VariableProtocol, runner: Runner) throws -> VariableProtocol
 }
