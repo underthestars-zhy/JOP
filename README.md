@@ -14,7 +14,7 @@ public static func run(_ text: String, filePath: URL, errorHandle: ((Error) -> V
 public static func run(_ dict: [String : Any], filePath: URL, errorHandle: ((Error) -> Void)? = nil) -> Processer?
 ```
 
-* `texr`: JSON file to be parsed
+* `text`: JSON file to be parsed
 * `dict`: Dict to be parsed
 * `filePath`: The path of the program at startup
 * `errorHandle`: Called when the program encounters an error
@@ -65,7 +65,7 @@ public struct OutPut {
 
 ## Example
 
-```json
+```swift
 let run: [String : Any] = [
     "main" : [
         [
