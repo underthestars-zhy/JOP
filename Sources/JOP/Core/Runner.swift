@@ -69,20 +69,20 @@ class Runner {
     }
     
     private func call(_ json: JSON) throws -> VariableProtocol {
-        if let type = json["type"].string {
-            if let name = json["name"].string {
-                if json.contains(where: { $0.0 == "package" }) {
-                    
-                } else { // Standard Package
-                    if type == "func" {
-                        return try Standard.call(name: name, value: try ValueNormalization.shared.normalization(json["passBy"], runner: self), runner: self)
-                    }
-                }
-            } else {
-                throw JOPRunError(kind: .missJSONKey(keyName: "name"))
-            }
-        } else {
+        guard let type = json["type"].string else {
             throw JOPRunError(kind: .missJSONKey(keyName: "type"))
+        }
+        
+        guard let name = json["name"].string else {
+            throw JOPRunError(kind: .missJSONKey(keyName: "name"))
+        }
+        
+        if json.contains(where: { $0.0 == "package" }) {
+            
+        } else { // Standard Package
+            if type == "func" {
+                return try Standard.call(name: name, value: try ValueNormalization.shared.normalization(json["passBy"], runner: self), runner: self)
+            }
         }
         
         return JOPVoid() // TODO: Remove

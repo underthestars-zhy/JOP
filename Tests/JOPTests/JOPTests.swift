@@ -22,20 +22,15 @@ final class JOPTests: XCTestCase {
                     "passBy": "$theFirstValue"
                 ],
                 [
-                    "command": "define",
-                    "name": "theSecondValue",
-                    "type": "String"
-                ],
-                [
                     "command": "assignment",
-                    "name": "theSecondValue",
+                    "name": "theFirstValue",
                     "value": "hello, JOP!"
                 ],
                 [
                     "command": "call",
                     "type": "func",
                     "name": "print",
-                    "passBy": "$theSecondValue"
+                    "passBy": "$theFirstValue"
                 ]
             ]
         ]
